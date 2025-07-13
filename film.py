@@ -290,7 +290,7 @@ class ModernMovieApp:
 
     def show_main_window(self):
         self.main_window = ctk.CTk()
-        self.main_window.title("CineMatch - Film Tavsiye Uygulaması")
+        self.main_window.title("CINEWHISPER - Film Tavsiye Uygulaması")
         self.main_window.state('zoomed')  # Tam ekran
         main_container = ctk.CTkFrame(self.main_window, corner_radius=0)
         main_container.pack(fill="both", expand=True)
@@ -304,7 +304,7 @@ class ModernMovieApp:
 
         logo_label = ctk.CTkLabel(
             logo_frame,
-            text="🎬 CineMatch",
+            text="🎬 CINEWHISPER",
             font=ctk.CTkFont(size=24, weight="bold"),
             text_color=COLORS['accent']
         )
