@@ -62,7 +62,6 @@ class ModernMovieApp:
 
 
     def create_modern_button(self, parent, text, command, color=None, hover_color=None):
-        """Modern stil buton oluştur"""
         btn_color = color or COLORS['primary']
         btn_hover = hover_color or COLORS['secondary']
 
@@ -79,7 +78,6 @@ class ModernMovieApp:
         return button
 
     def create_movie_card(self, parent, movie_data):
-        """Film kartı oluştur"""
         card_frame = ctk.CTkFrame(
             parent,
             corner_radius=15,
@@ -142,7 +140,6 @@ class ModernMovieApp:
         return card_frame
 
     def show_login_window(self):
-        """Modern giriş ekranı"""
         self.login_window = ctk.CTk()
         self.login_window.title("Film Tavsiye Uygulaması - Giriş")
         self.login_window.geometry("450x550")
@@ -484,13 +481,11 @@ class ModernMovieApp:
         self.load_popular_movies()
 
     def load_popular_movies(self):
-        """Popüler filmleri yükle"""
         if self.df is not None:
             popular_movies = self.df.nlargest(20, 'rating')
             self.current_movies_df = popular_movies  
             self.display_movies(popular_movies)
     def display_movies(self, movies_df):
-        """Filmleri ekranda göster"""
         self.current_movies_df = movies_df.copy()
 
         for widget in self.movie_scroll_frame.winfo_children():
@@ -521,7 +516,6 @@ class ModernMovieApp:
         self.load_popular_movies()
 
     def search_movies(self):
-        """Film arama fonksiyonu"""
         if self.df is None:
             return
 
@@ -554,7 +548,6 @@ class ModernMovieApp:
         self.display_movies(filtered_df.sort_values('rating', ascending=False))
 
     def sort_movies(self, sort_by):
-        """Film sıralama"""
         if self.current_movies_df is None or self.current_movies_df.empty:
             return
 
@@ -569,7 +562,6 @@ class ModernMovieApp:
         self.display_movies(sorted_df)
 
     def show_movie_details(self, movie_title):
-        """Film detay ekranı"""
         movie_data = self.df[self.df['title'] == movie_title].iloc[0]
 
         detail_window = ctk.CTkToplevel(self.main_window)
@@ -663,7 +655,6 @@ class ModernMovieApp:
         add_favorite_btn.pack(side="left", padx=10)
 
     def show_add_menu(self, movie_title):
-        """Film ekleme menüsü"""
         add_window = ctk.CTkToplevel(self.main_window)
         add_window.title("Listeye Ekle")
         add_window.lift()
@@ -698,7 +689,6 @@ class ModernMovieApp:
             btn.pack(pady=5, padx=20, fill="x")
 
     def add_to_list(self, list_name, movie_title):
-        """Film listesine ekle"""
         if movie_title not in self.user_lists[list_name]:
             self.user_lists[list_name].append(movie_title)
             self.save_user_lists()
@@ -719,7 +709,6 @@ class ModernMovieApp:
             messagebox.showwarning("Uyarı", "Bu film zaten listede mevcut!")
 
     def show_lists(self):
-        """Kullanıcı listelerini göster"""
         lists_window = ctk.CTkToplevel(self.main_window)
         lists_window.title("Film Listelerim")
         lists_window.lift()
@@ -760,7 +749,6 @@ class ModernMovieApp:
             self.create_list_tab(tab, list_key, color)
 
     def create_list_tab(self, parent, list_key, color):
-        """Liste sekmesi oluştur"""
         movies = self.user_lists.get(list_key, [])
 
         if not movies:
@@ -799,7 +787,6 @@ class ModernMovieApp:
             self.create_list_item(scroll_frame, movie_title, list_key, color)
 
     def create_list_item(self, parent, movie_title, list_key, color):
-        """Liste öğesi oluştur"""
         item_frame = ctk.CTkFrame(parent, height=60, corner_radius=10)
         item_frame.pack(fill="x", pady=5)
         item_frame.pack_propagate(False)
@@ -837,7 +824,6 @@ class ModernMovieApp:
         remove_btn.pack(side="left", padx=2)
 
     def clear_list(self, list_key):
-        """Listeyi temizle"""
         list_names = {
             'liked': 'Beğendiklerim',
             'disliked': 'Beğenmediklerim',
@@ -995,7 +981,6 @@ class ModernMovieApp:
         import_btn.pack(fill="x")
 
     def export_lists(self):
-        """Listeleri dışa aktar"""
         try:
             filename = f"{self.current_user}_movie_lists.json"
             with open(filename, 'w', encoding='utf-8') as f:
@@ -1027,7 +1012,6 @@ class ModernMovieApp:
             messagebox.showerror("Hata", f"İçe aktarma başarısız: {e}")
 
     def login(self):
-        """Kullanıcı girişi"""
         username = self.username_entry.get().strip()
         password = self.password_entry.get()
 
@@ -1077,12 +1061,10 @@ class ModernMovieApp:
         self.show_login_window()
 
     def back_to_login(self):
-        """Giriş ekranına dön"""
         self.register_window.destroy()
         self.show_login_window()
 
     def logout(self):
-        """Çıkış yap"""
         result = messagebox.askyesno("Çıkış", "Çıkış yapmak istediğinizden emin misiniz?")
         if result:
             self.main_window.destroy()
@@ -1097,7 +1079,6 @@ class ModernMovieApp:
             self.show_login_window()
 
     def load_users(self):
-        """Kullanıcıları yükle"""
         try:
             if os.path.exists(USER_DATA_FILE):
                 with open(USER_DATA_FILE, 'r', encoding='utf-8') as f:
@@ -1107,7 +1088,6 @@ class ModernMovieApp:
         return {}
 
     def save_users(self, users):
-        """Kullanıcıları kaydet"""
         try:
             with open(USER_DATA_FILE, 'w', encoding='utf-8') as f:
                 json.dump(users, f, ensure_ascii=False, indent=2)
