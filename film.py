@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 import pandas as pd
 import customtkinter as ctk
-from PIL import Image, ImageDraw
 import webbrowser
 import json
 import os
@@ -12,6 +11,7 @@ ctk.set_default_color_theme("blue")
 
 USER_DATA_FILE = "users.json"
 USER_LISTS_FILE = "user_lists.json"
+
 COLORS = {
     'primary': '#1f538d',
     'secondary': '#14375e',
@@ -25,12 +25,26 @@ COLORS = {
     'warning': '#f59e0b'
 }
 
-
 class ModernMovieApp:
     def __init__(self):
+        self.password_entry = None
+        self.username_entry = None
+        self.register_window = None
+        self.keyword_entry = None
+        self.reg_username_entry = None
+        self.reg_password_entry = None
+        self.reg_confirm_entry = None
+        self.main_window = None
+        self.director_entry = None
+        self.actor_entry = None
+        self.sort_option = None
+        self.movie_scroll_frame = None
+        self.genre_entry = None
+        self.rating_slider = None
+        self.rating_value_label = None
         self.current_user = None
         self.df = None
-        self.current_movies_df = None  
+        self.current_movies_df = None
         self.load_data()
         self.user_lists = {
             'liked': [],
@@ -42,7 +56,7 @@ class ModernMovieApp:
 
     def load_data(self):
         try:
-            file_path = r"C:\Users\sarme\Desktop\edu\3\seminer 1\Top_10000_Movies_IMDb.csv"  
+            file_path = r"C:\Users\sarme\Desktop\edu\3\seminer 1\Top_10000_Movies_IMDb.csv"
             self.df = pd.read_csv(file_path)
             self.df.rename(columns={
                 "Movie Name": "title",
@@ -59,7 +73,6 @@ class ModernMovieApp:
             }, inplace=True)
         except FileNotFoundError:
             messagebox.showerror("Hata", "Film veritabanı dosyası bulunamadı!")
-
 
     def create_modern_button(self, parent, text, command, color=None, hover_color=None):
         btn_color = color or COLORS['primary']
@@ -85,7 +98,6 @@ class ModernMovieApp:
             border_width=1,
             border_color=COLORS['secondary']
         )
-
         title_label = ctk.CTkLabel(
             card_frame,
             text=movie_data['title'][:40] + ("..." if len(movie_data['title']) > 40 else ""),
@@ -93,8 +105,10 @@ class ModernMovieApp:
             text_color=COLORS['text_primary']
         )
         title_label.pack(pady=(15, 5), padx=15, anchor="w")
+
         info_frame = ctk.CTkFrame(card_frame, fg_color="transparent")
         info_frame.pack(fill="x", padx=15, pady=5)
+
         rating_frame = ctk.CTkFrame(info_frame, fg_color="transparent")
         rating_frame.pack(fill="x")
 
@@ -113,7 +127,7 @@ class ModernMovieApp:
             text_color=COLORS['text_secondary']
         )
         genre_label.pack(side="right")
-        
+
         button_frame = ctk.CTkFrame(card_frame, fg_color="transparent")
         button_frame.pack(fill="x", padx=15, pady=(10, 15))
 
@@ -201,7 +215,6 @@ class ModernMovieApp:
         )
         login_btn.pack(fill="x", pady=(0, 15))
 
-        # Kayıt butonu
         register_btn = self.create_modern_button(
             form_frame,
             "Yeni Hesap Oluştur",
@@ -222,13 +235,16 @@ class ModernMovieApp:
         self.register_window.title("Yeni Hesap Oluştur")
         self.register_window.geometry("450x600")
         self.register_window.resizable(False, False)
+
         screen_width = self.register_window.winfo_screenwidth()
         screen_height = self.register_window.winfo_screenheight()
         x = (screen_width - 450) // 2
         y = (screen_height - 600) // 2
         self.register_window.geometry(f"450x600+{x}+{y}")
+
         main_frame = ctk.CTkFrame(self.register_window, corner_radius=20)
         main_frame.pack(fill="both", expand=True, padx=20, pady=20)
+
         title_label = ctk.CTkLabel(
             main_frame,
             text="Hesap Oluştur",
@@ -236,6 +252,7 @@ class ModernMovieApp:
             text_color=COLORS['accent']
         )
         title_label.pack(pady=(30, 20))
+
         form_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
         form_frame.pack(fill="x", padx=40)
 
@@ -267,6 +284,7 @@ class ModernMovieApp:
             corner_radius=10
         )
         self.reg_confirm_entry.pack(fill="x", pady=(0, 25))
+
         register_btn = self.create_modern_button(
             form_frame,
             "Hesap Oluştur",
@@ -289,13 +307,12 @@ class ModernMovieApp:
         self.main_window = ctk.CTk()
         self.main_window.title("CINEWHISPER - Film Tavsiye Uygulaması")
         self.main_window.state('zoomed')  # Tam ekran
+
         main_container = ctk.CTkFrame(self.main_window, corner_radius=0)
         main_container.pack(fill="both", expand=True)
-
         top_bar = ctk.CTkFrame(main_container, height=70, corner_radius=0)
         top_bar.pack(fill="x", padx=0, pady=0)
         top_bar.pack_propagate(False)
-
         logo_frame = ctk.CTkFrame(top_bar, fg_color="transparent")
         logo_frame.pack(side="left", padx=20, pady=15)
 
@@ -314,7 +331,7 @@ class ModernMovieApp:
             text_color=COLORS['text_secondary']
         )
         welcome_label.pack(side="left", padx=(20, 0))
-        
+
         button_frame = ctk.CTkFrame(top_bar, fg_color="transparent")
         button_frame.pack(side="right", padx=20, pady=15)
 
@@ -345,17 +362,21 @@ class ModernMovieApp:
             fg_color=COLORS['error']
         )
         logout_btn.pack(side="right")
+
         content_frame = ctk.CTkFrame(main_container, corner_radius=0)
         content_frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
 
         left_panel = ctk.CTkFrame(content_frame, width=350, corner_radius=15)
         left_panel.pack(side="left", fill="y", padx=(0, 10), pady=10)
         left_panel.pack_propagate(False)
+
         self.create_filter_panel(left_panel)
-        
+
         right_panel = ctk.CTkFrame(content_frame, corner_radius=15)
         right_panel.pack(side="right", fill="both", expand=True, pady=10)
+
         self.create_movie_panel(right_panel)
+
         self.main_window.mainloop()
 
     def create_filter_panel(self, parent):
@@ -369,6 +390,7 @@ class ModernMovieApp:
 
         filter_frame = ctk.CTkFrame(parent, fg_color="transparent")
         filter_frame.pack(fill="x", padx=20)
+
         keyword_label = ctk.CTkLabel(filter_frame, text="Anahtar Kelime:", font=ctk.CTkFont(size=14, weight="bold"))
         keyword_label.pack(anchor="w", pady=(0, 5))
 
@@ -382,6 +404,7 @@ class ModernMovieApp:
 
         genre_label = ctk.CTkLabel(filter_frame, text="Tür:", font=ctk.CTkFont(size=14, weight="bold"))
         genre_label.pack(anchor="w", pady=(0, 5))
+
         self.genre_entry = ctk.CTkEntry(
             filter_frame,
             placeholder_text="örn: Action, Comedy, Drama",
@@ -389,9 +412,10 @@ class ModernMovieApp:
             corner_radius=10
         )
         self.genre_entry.pack(fill="x", pady=(0, 20))
-        
+
         director_label = ctk.CTkLabel(filter_frame, text="Yönetmen:", font=ctk.CTkFont(size=14, weight="bold"))
         director_label.pack(anchor="w", pady=(0, 5))
+
         self.director_entry = ctk.CTkEntry(
             filter_frame,
             placeholder_text="örn: Christopher Nolan",
@@ -399,9 +423,10 @@ class ModernMovieApp:
             corner_radius=10
         )
         self.director_entry.pack(fill="x", pady=(0, 20))
-        
+
         actor_label = ctk.CTkLabel(filter_frame, text="Oyuncu:", font=ctk.CTkFont(size=14, weight="bold"))
         actor_label.pack(anchor="w", pady=(0, 5))
+
         self.actor_entry = ctk.CTkEntry(
             filter_frame,
             placeholder_text="örn: Leonardo DiCaprio",
@@ -412,6 +437,7 @@ class ModernMovieApp:
 
         rating_label = ctk.CTkLabel(filter_frame, text="Minimum IMDb Puanı:", font=ctk.CTkFont(size=14, weight="bold"))
         rating_label.pack(anchor="w", pady=(0, 5))
+
         self.rating_slider = ctk.CTkSlider(
             filter_frame,
             from_=0,
@@ -438,7 +464,7 @@ class ModernMovieApp:
             COLORS['success']
         )
         search_btn.pack(fill="x", pady=(10, 0))
-        
+
         clear_btn = self.create_modern_button(
             filter_frame,
             "🧹 Temizle",
@@ -459,6 +485,7 @@ class ModernMovieApp:
             text_color=COLORS['accent']
         )
         title_label.pack(side="left", pady=15)
+
         sort_frame = ctk.CTkFrame(title_frame, fg_color="transparent")
         sort_frame.pack(side="right", pady=15)
 
@@ -483,13 +510,14 @@ class ModernMovieApp:
     def load_popular_movies(self):
         if self.df is not None:
             popular_movies = self.df.nlargest(20, 'rating')
-            self.current_movies_df = popular_movies  
+            self.current_movies_df = popular_movies  # Bu satırı ekleyin
             self.display_movies(popular_movies)
     def display_movies(self, movies_df):
         self.current_movies_df = movies_df.copy()
 
         for widget in self.movie_scroll_frame.winfo_children():
             widget.destroy()
+
         if movies_df.empty:
             no_results_label = ctk.CTkLabel(
                 self.movie_scroll_frame,
@@ -525,7 +553,7 @@ class ModernMovieApp:
         director_filter = self.director_entry.get().strip()
         actor_filter = self.actor_entry.get().strip()
         min_rating = self.rating_slider.get()
-        
+
         if keyword_filter:
             keyword_mask = (
                 filtered_df['title'].str.contains(keyword_filter, case=False, na=False) |
@@ -568,11 +596,10 @@ class ModernMovieApp:
         detail_window.title(f"Film Detayları - {movie_title}")
         detail_window.geometry("800x600")
         detail_window.resizable(True, True)
-        detail_window.lift()  
-        detail_window.attributes('-topmost', True)  
-        detail_window.focus()  
-        detail_window.grab_set()  
-
+        detail_window.lift()
+        detail_window.attributes('-topmost', True)
+        detail_window.focus()
+        detail_window.grab_set()
         main_frame = ctk.CTkScrollableFrame(detail_window)
         main_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
@@ -581,7 +608,6 @@ class ModernMovieApp:
             detail_window.destroy()
 
         detail_window.protocol("WM_DELETE_WINDOW", on_closing)
-  
         title_label = ctk.CTkLabel(
             main_frame,
             text=movie_data['title'],
@@ -589,7 +615,6 @@ class ModernMovieApp:
             text_color=COLORS['accent']
         )
         title_label.pack(pady=(0, 20))
-
         info_frame = ctk.CTkFrame(main_frame)
         info_frame.pack(fill="x", pady=(0, 20))
 
@@ -597,7 +622,7 @@ class ModernMovieApp:
             ("🎭 Tür:", movie_data['genre']),
             ("⭐ IMDb Puanı:", f"{movie_data['rating']}/10"),
             ("⏰ Süre:", movie_data['runtime']),
-            ("🎬 Yönetmen:", movie_data['director']),
+            ("🎬 Yönetmen:", movie_data['director'],),
             ("🎭 Oyuncular:", movie_data['actors'][:100] + "..."),
         ]
 
@@ -722,7 +747,6 @@ class ModernMovieApp:
             lists_window.destroy()
 
         lists_window.protocol("WM_DELETE_WINDOW", on_closing)
-        
         main_frame = ctk.CTkFrame(lists_window)
         main_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
@@ -733,6 +757,7 @@ class ModernMovieApp:
             text_color=COLORS['accent']
         )
         title_label.pack(pady=(20, 30))
+
         tabview = ctk.CTkTabview(main_frame, width=950, height=600)
         tabview.pack(fill="both", expand=True, padx=20, pady=(0, 20))
 
@@ -760,6 +785,7 @@ class ModernMovieApp:
             )
             empty_label.pack(expand=True)
             return
+
         header_frame = ctk.CTkFrame(parent, fg_color="transparent")
         header_frame.pack(fill="x", padx=20, pady=(20, 10))
 
@@ -831,6 +857,7 @@ class ModernMovieApp:
             'to_watch': 'İzleyeceklerim',
             'favorites': 'Favorilerim'
         }
+
         confirm_window = ctk.CTkToplevel()
         confirm_window.title("Onay")
         confirm_window.geometry("400x200")
@@ -839,10 +866,10 @@ class ModernMovieApp:
         confirm_window.attributes('-topmost', True)
         confirm_window.focus()
         confirm_window.grab_set()
-
         confirm_window.transient(self.main_window)
         main_frame = ctk.CTkFrame(confirm_window)
         main_frame.pack(fill="both", expand=True, padx=20, pady=20)
+
         message_label = ctk.CTkLabel(
             main_frame,
             text=f"{list_names[list_key]} listesini tamamen temizlemek\nistediğinizden emin misiniz?",
@@ -857,24 +884,22 @@ class ModernMovieApp:
         def confirm_action():
             self.user_lists[list_key] = []
             self.load_user_lists()
+
             confirm_window.grab_release()
             confirm_window.destroy()
-            temp_root = tk.Tk()
-            temp_root.withdraw()
-            temp_root.attributes('-topmost', True)
-            messagebox.showinfo("Başarılı", f"{list_names[list_key]} listesi temizlendi!", parent=temp_root)
-            temp_root.destroy()
 
             for widget in self.main_window.winfo_children():
                 if isinstance(widget, ctk.CTkToplevel):
                     if "Film Listelerim" in widget.title():
                         widget.destroy()
                         break
-            self.main_window.after(1, self.show_lists) 
+
+            self.main_window.after(1, self.show_lists)  # Kısa bir gecikme ile aç
 
         def cancel_action():
             confirm_window.grab_release()
             confirm_window.destroy()
+
         yes_btn = ctk.CTkButton(
             button_frame,
             text="Evet",
@@ -883,6 +908,7 @@ class ModernMovieApp:
             width=100
         )
         yes_btn.pack(side="left", padx=(0, 10))
+
         no_btn = ctk.CTkButton(
             button_frame,
             text="Hayır",
@@ -891,6 +917,7 @@ class ModernMovieApp:
             width=100
         )
         no_btn.pack(side="left")
+
         confirm_window.protocol("WM_DELETE_WINDOW", cancel_action)
     def show_profile(self):
         profile_window = ctk.CTkToplevel(self.main_window)
@@ -903,7 +930,6 @@ class ModernMovieApp:
 
         main_frame = ctk.CTkFrame(profile_window)
         main_frame.pack(fill="both", expand=True, padx=20, pady=20)
-
         title_label = ctk.CTkLabel(
             main_frame,
             text="👤 Profil Bilgileri",
@@ -911,7 +937,6 @@ class ModernMovieApp:
             text_color=COLORS['accent']
         )
         title_label.pack(pady=(30, 40))
-
         info_frame = ctk.CTkFrame(main_frame, corner_radius=15)
         info_frame.pack(fill="x", padx=20, pady=(0, 30))
 
@@ -921,7 +946,7 @@ class ModernMovieApp:
             font=ctk.CTkFont(size=18, weight="bold")
         )
         user_label.pack(pady=20)
-        
+
         stats_frame = ctk.CTkFrame(main_frame, corner_radius=15)
         stats_frame.pack(fill="x", padx=20, pady=(0, 30))
 
@@ -960,7 +985,7 @@ class ModernMovieApp:
                 text_color=COLORS['accent']
             )
             count_label.pack(side="right")
-            
+
         button_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
         button_frame.pack(fill="x", padx=20, pady=20)
 
@@ -1099,7 +1124,7 @@ class ModernMovieApp:
             if os.path.exists(USER_LISTS_FILE):
                 with open(USER_LISTS_FILE, 'r', encoding='utf-8') as f:
                     all_lists = json.load(f)
-                    if self.current_user in all_lists:               
+                    if self.current_user in all_lists:
                         default_lists = {
                             'liked': [],
                             'disliked': [],
